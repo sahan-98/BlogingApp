@@ -1,0 +1,165 @@
+import Format2 from "../../layout/format2"
+import Image from "next/image"
+import Link from "next/link"
+
+import { useRouter } from 'next/router';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+
+import { alertService } from '../../services/alertService';
+import { userService } from '../../services/userServices';
+
+export default function signUp(props){
+
+        const user = props?.user;
+        const router = useRouter();
+    
+        // form validation rules 
+        const validationSchema = Yup.object().shape({
+            name: Yup.string()
+                .required('First Name is required'),
+            email: Yup.string()
+                .required('email is required'),
+            username: Yup.string()
+                .required('Username is required'),
+            password: Yup.string()
+                .transform(x => x === '' ? undefined : x)
+                // password optional in edit mode
+                .concat(user ? null : Yup.string().required('Password is required'))
+                .min(6, 'Password must be at least 6 characters')
+        });
+        const formOptions = { resolver: yupResolver(validationSchema) };
+    
+        // set default form values if in edit mode
+        if (user) {
+            formOptions.defaultValues = props.user;
+        }
+    
+        // get functions to build form with useForm() hook
+        const { register, handleSubmit, reset, formState } = useForm(formOptions);
+        const { errors } = formState;
+    
+        async function onSubmit(data) {
+            alertService.clear();
+            try {
+                // create or update user based on user prop
+                let message;
+                await userService.signUp(data);
+                message = 'User added';
+
+    
+                // redirect to user list with success message
+                router.push('/posts/login');
+                alertService.success(message, true);
+            } catch (error) {
+                alertService.error(error);
+                console.error(error);
+            }
+        }
+    
+
+
+    return(
+
+        <Format2>
+           <div className="flex flex-col items-center md:flex-row md:h-screen">
+                <div className="flex items-center justify-center w-full md:w-1/2">
+                    <Image src="/images/signUp.jpg" alt="Login Image" width={640} height={600} />
+                </div>
+                <div className="flex flex-col items-center justify-center w-full md:w-1/2 h-full bg-gray-200">
+                    <div className="w-full max-w-md space-y-8">
+                    <div>
+                        <h1 className="text-2xl font-bold">User Regitration</h1>
+                        <p className="mt-2 text-gray-600">
+                        Please sign up to your account.
+                        </p>
+                    </div>
+                    <form className="mt-8 space-y-3" onSubmit={handleSubmit(onSubmit)}>
+                        <div>
+                        <label htmlFor="text" className="block font-bold text-gray-700">
+                            Name
+                        </label>
+                        <input
+                            id="name"
+                            type="text"
+                            placeholder="Enter your Name"
+                            {...register('name')}
+                            // value={name}
+                            // onChange={(ev) => setName(ev.target.value)}
+                            className={`form-control ${errors.name ? 'is-invalid' : ''}, w-full px-4 py-3 mt-1 border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 `}
+                            required
+                        />
+                        </div>
+                        <div>
+                        <label htmlFor="text" className="block font-bold text-gray-700">
+                            User Name
+                        </label>
+                        <input
+                            id="userName"
+                            type="text"
+                            placeholder="Enter your User Name"
+                            {...register('username')}
+                            // value={username}
+                            // onChange={(ev) => setUserName(ev.target.value)}
+                            className={`form-control ${errors.username ? 'is-invalid' : ''}, w-full px-4 py-3 mt-1 border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 `}
+                            required
+                        />
+                        </div>
+                        <div>
+                        <label htmlFor="email" className="block font-bold text-gray-700">
+                            Email address
+                        </label>
+                        <input
+                            id="email"
+                            type="email"
+                            placeholder="Enter your email"
+                            {...register('email')}
+                            // value={email}
+                            // onChange={(ev) => setEmail(ev.target.value)}
+                            className={`form-control ${errors.email ? 'is-invalid' : ''}, w-full px-4 py-3 mt-1 border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 `}
+                            required
+                        />
+                        </div>
+                        <div>
+                        <label
+                            htmlFor="password"
+                            className="block font-bold text-gray-700"
+                        >
+                            Password
+                        </label>
+                        <input
+                            id="password"
+                            type="password"
+                            placeholder="Enter your password"
+                            {...register('password')}
+                            // value={password}
+                            // onChange={(ev) => setpassword(ev.target.value)}
+                            className={`form-control ${errors.password ? 'is-invalid' : ''}, w-full px-4 py-3 mt-1 border-gray-300 rounded-md focus:border-indigo-500 focus:ring focus:ring-indigo-200 `}
+                            required
+                        />
+                        </div>
+                        <div>
+                        <button
+                            type="submit"
+                            disabled={formState.isSubmitting}
+                            className="w-full px-4 py-3 font-bold text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700"
+                        >
+                        {formState.isSubmitting && <span className="spinner-border spinner-border-sm me-1"></span>}
+                            Sign up
+                            </button>
+                            <button onClick={() => reset(formOptions.defaultValues)} type="button" disabled={formState.isSubmitting} className="w-full px-4 py-3 mt-2 font-bold text-white bg-indigo-500 rounded-md hover:bg-indigo-600 focus:outline-none focus:shadow-outline-indigo focus:border-indigo-700">Reset</button>
+                            </div>   
+                        </form>
+                        <p className="mt-3 text-sm text-center text-gray-700">
+                            Already you have an account?{" "}
+                            <Link href={"http://localhost:3000/posts/login"} className="font-medium text-blue-600 hover:underline">
+                                 Login
+                            </Link>
+                        </p>    
+                    </div>
+                </div>
+            </div>
+        </Format2>
+    )
+}
