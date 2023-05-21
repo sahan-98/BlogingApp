@@ -2,22 +2,10 @@ import Link from "next/link"
 import Image from "next/image"
 import { useState, useEffect } from 'react';
 import axios from "axios";
-
-// import { Spinner } from '../components/Spinner';
 import { postService } from '../services/postService';
 
+
 export default function mainSection() {
-
-
-    // function deleteUser(id) {
-    //     setUsers(users.map(x => {
-    //         if (x.id === id) { x.isDeleting = true; }
-    //         return x;
-    //     }));
-    //     userService.delete(id).then(() => {
-    //         setUsers(users => users.filter(x => x.id !== id));
-    //     });
-    // }  
 
     return (
         <section className="container mx-auto md:px-20 py-10">
