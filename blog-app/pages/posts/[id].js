@@ -100,7 +100,7 @@ export default function blogPage() {
 
                         <div className="flex flex justify-center gap-5 pr-10">
                             {posts && (
-                            <button onClick={() => router.push(`/posts/edit/${posts._id}`)} className="btn btn-link nav-item nav-link bg-blue-500 font- text-white hover:bg-red-700">
+                            <button onClick={() => router.push(`/posts/edit/${posts._id}`)} className="btn btn-link nav-item nav-link bg-blue-500 font- text-white hover:bg-blue-700">
                                 Edit
                             </button>
                             )}
