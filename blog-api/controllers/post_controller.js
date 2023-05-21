@@ -38,26 +38,6 @@ const Post = require('../schemas/post_schema');
             })
     }
 
-    // //get user own article
-    // MyArticles: async (req, res) => {
-    //     Post.find({ postedBy: req.user._id })
-    //         .populate("postedBy", '_id name email')
-    //         .sort('-createdAt')
-    //         .then(myPost => {
-    //             res.json({ myPost })
-    //         }).catch(err => {
-    //             console.log(err);
-    //         })
-    // }
-
-    // //get relavant article by ID
-    // const getPostDetailsbyID = async (req, res) => {
-    //     let id = req.params.id;
-    //     Post.findById(id, function (err, post) {
-    //         res.json(post);
-    //     });
-    // }
-
     //Search function
     const searchBlogPosts = async (req, res, next) => {
       const searchText = req.params.key;

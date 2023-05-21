@@ -19,7 +19,6 @@ const PostRoutes = require('./routes/post_routes');
 
 
 const MONGO_DB_PASSWORD = process.env['MONGO_DB_PASSWORD'];
-// const connectionString = `mongodb+srv://SSD_project:${MONGO_DB_PASSWORD}@ssdproject.dvad8v4.mongodb.net/?retryWrites=true&w=majority`;
 const connectionString = `mongodb+srv://blogingApi:${MONGO_DB_PASSWORD}@bloging-api.kjrp56b.mongodb.net/?retryWrites=true&w=majority`;
 
 
